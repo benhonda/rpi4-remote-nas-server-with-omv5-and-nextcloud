@@ -1,6 +1,8 @@
 
 # How to build a personal cloud storage server in 1 day or less.
 
+<a href="https://www.linkedin.com/pulse/how-build-personal-cloud-storage-server-1-day-less-ben-honda">View this tutorial on LinkedIn</a>.
+
 ### Why would you want to create your own cloud storage server?
 - You're in complete control of your data (it's literally on a box right in front of you)
 - You can access your files from anywhere with an internet connection
