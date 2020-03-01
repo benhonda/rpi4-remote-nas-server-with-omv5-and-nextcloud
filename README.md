@@ -1,6 +1,15 @@
 
 # How to build a personal cloud storage server in 1 day or less.
 
+### Why would you want to create your own cloud storage server?
+- You're in complete control of your data (it's literally on a box right in front of you)
+- You can access your files from anywhere with an internet connection
+- It's super easy to scale as your data grows
+- You have the option to add more hard drives and have backups of your backups (i.e. RAID)
+- You can unplug and take your data with you anywhere (i.e. if you're offline and need your data)
+- Moving files & folders is as easy as moving data from one Finder window to another
+- The price is unbeatable. You will only have to pay for your RPi and HD, all the software we use is FREE (~$140 CAD for my entire setup (1TB of cloud storage), but you can make yours for <$100).
+
 ### Preface
 
 This tutorial was created on March 1st, 2020. I will not be updating it much in the future, however, unless there are major changes made to OpenMediaVault or NextCloud, it should still be applicable for years to come.
@@ -15,7 +24,7 @@ If you're ready to build your own personal cloud-based storage solution, let's g
 - Mac computer (this is an Apple tutorial)
 - Raspberry Pi 4 with Raspbian
 - Micro SD card (ideally >4GB and FAST)
-- Empty external hard drive (this is your actual storage, so ideally USB 3.0, >500GB and formatted as ExFAT)
+- \>=2.5" Empty external hard drive (this is your actual storage, so ideally USB 3.0, >500GB and formatted as ExFAT)
 - Keyboard and mouse (to connect to RPi, optional for SSH setup)
 - Mini HDMI (to connect to monitor)
 - OpenMediaVault 5 (usul, downloaded later)
@@ -345,6 +354,11 @@ Connect to it and enter your login information. Once it's all set up, try to dra
 
 Congratualtions! You just created your own personal cloud storage server and you can now put files directly onto your external hard drive from anywhere in the world. It's not the most performant solution in the world but hey, you're in complete control of your data now. Give yourself a pat on the back, you deserve it.
 
+<br />
+<br />
 
+The final product. This is what 1TB of cloud storage looks like.
+
+<img alt="The final product" width="300px" src="https://github.com/benhonda/rpi4-remote-nas-server-with-omv5-and-nextcloud/blob/master/naspi.jpg" />
 
 
