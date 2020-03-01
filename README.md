@@ -1,8 +1,6 @@
 
 # How to build a personal cloud storage server in 1 day or less.
 
-#### The instructions included in this tutorial are for those working on MacOS. If are working on a Microsoft system or similar the general process is the same, you'll just have to convert the code instructions to the non-linux equivalent.
-
 ### Preface
 
 This tutorial was created on March 1st, 2020. I will not be updating it much in the future, however, unless there are major changes made to OpenMediaVault or NextCloud, it should still be applicable for years to come.
@@ -17,50 +15,50 @@ If you're ready to build your own personal cloud-based storage solution, let's g
 - Mac computer (this is an Apple tutorial)
 - Raspberry Pi 4 with Raspbian
 - Micro SD card (ideally >4GB and FAST)
-- External hard drive (this is your actual storage, so ideally USB 3.0, >500GB and formatted as ExFAT)
-- Keyboard and mouse (to connect to RPI, optional)
+- Empty external hard drive (this is your actual storage, so ideally USB 3.0, >500GB and formatted as ExFAT)
+- Keyboard and mouse (to connect to RPi, optional for SSH setup)
 - Mini HDMI (to connect to monitor)
-- OpenMediaVault 5 (usul)
-- NextCloud V18.0.1
-- PHP V7.3.14
+- OpenMediaVault 5 (usul, downloaded later)
+- NextCloud V18.0.1 (downloaded later)
+- PHP V7.3.14 (downloaded later)
 
-## 1. Enable SSH on RPI (Optional)
+## 1. Enable SSH on RPi (Optional)
 
-Setting up SSH is optional, however it will make your life easier because we will be able to take full advantage of the bandwidth and power of your Mac, as opposed to doing everything on the RPI. Your RPI will become headless, too.
+I will be controlling my RPi from my Mac through SSH. If you are trying to SSH to a headless RPi, you can find out how to do so <a href="https://www.raspberrypi.org/documentation/remote-access/ssh/">here</a>.
 
-### Enable SSH on RPI
+### Enable SSH on RPi
 
-On your RPI, go to Menu > Preferences > Raspberry Pi Configuration. Go to the Interfaces panel and make sure SSH is Enabled.
+On your RPi, go to Menu > Preferences > Raspberry Pi Configuration. Go to the Interfaces panel and make sure SSH is Enabled.
 
 ### Get your IP address
 
-On your RPI, open a terminal window and enter the following command:
+On your RPi, open a terminal window and enter the following command:
 ```
 hostname -I
 ```
-which will return your RPI IP address. For example,
+which will return your RPi IP address. For example,
 ```
 192.168.0.41
 ```
 copy this value down somewhere.
 
-### Connect to RPI via SSH
+### Connect to RPi via SSH
 
 Open a terminal window on your Mac computer and enter the following command:
 ```
 ssh pi@192.168.0.41
 ```
-The IP address is the example we used above. Replace the `192.168.0.41` with the IP address your own IP address you got in the previous step.
+Replace the `192.168.0.41` with your own IP address you got in the previous step.
 
-Terminal will ask you if you want to continue. Enter `yes` and press RETURN. At this point, you'll be asked to enter the RPI password.
+If this is the first time you're connecting to your RPi over SSH, Terminal will ask you if you want to continue. Enter `yes` and press RETURN. At this point, you'll be asked to enter the RPi password.
 
-You are now connected to your RPI via SSH. To prove this, enter the command `ls` and you will see a list of the root RPI files.
+You have now connected to your RPi through SSH and have full control of it over the command line.
 
-To make this easier the next time you want to connect to your PI, set up an alias on your Mac. Instructions for this can be found online. For example, the alias I set up in .bash_profile is `alias pi="ssh pi@192.168.0.41"`
+## 2. Install and Setup OMV
 
-## 2. Install and Setup OMV5
+#### NOTE: from here on when I refer to the Terminal, I mean the Terminal on your Mac that is connected to your RPi over SSH.
 
-In the Mac Terminal (which is connected to the RPI now via SSH) enter each of the following commands (each command is the entire code block, ranging from 1 to several lines) and press enter each time. This should go without saying, but make sure to wait until the previous command process is done before entering the next one.
+In the Terminal, enter each of the following commands (each command is the entire code block, ranging from 1 to several lines) and press enter each time. This should go without saying, but make sure to wait until the previous command process is done before entering the next one.
 ```
 sudo su
 ```
@@ -116,35 +114,36 @@ omv-confdbadm populate
 cat /etc/issue
 ```
 
-OMV5 should now be ready to go on your RPI. You can access OMV5 on your Mac by opening up a web browser and entering in the following URL:
-```
-http://<hostname>
-```
-where `<hostname>` should be replaced by the hostname of your RPI. You can get the hostname of your RPI by entering the `hostname` command in your RPI terminal (or SSH connected one). If this doesn't work (most modern browsers automatically prefix `www` and suffix `.com`) you can simply enter the IP address obtained above.
+OMV should now be ready to go on your RPi. You can access OMV on your Mac by opening up a web browser and entering the IP address obtained previously as the URL.
 
 ### Troubleshooting
 
-If after installing OMV5 you can no longer log into your RPI via SSH (`permission denied (public key, password)`) it is because the `pi` user is not included in the `ssh` group on OMV5. To fix this, go to the OMV5 GUI, navigate to the Group tab, select the pi group from the table and click Edit. Add the pi user to the pi group, then select OK. Navigate to the User tab, select the newly created pi user and click Edit. Under the Groups tab, scroll down and make sure SSH is enabled (checked). Save and apply settings and you should be able to SSH to your RPI again.
+If after installing OMV you can no longer log into your RPi via SSH (`permission denied (public key, password)`) it is because the `pi` user is not included in the `ssh` group on OMV. To fix this, go to the OMV GUI, navigate to the Group tab, select the pi group from the table and click Edit. Add the pi user to the pi group, then select OK. Navigate to the User tab, select the newly created pi user and click Edit. Under the Groups tab, scroll down and make sure SSH is enabled (checked). Save and apply settings and you should be able to SSH to your RPi again.
 
-## 3. Install NextCloud on top of OMV5
+### A quick note before continuing...
 
-Navigate to OMV by going to `http://<hostname>` and enter your login information. Unless you have changed it, the username is `admin` and password is `openmediavault` by default.
+Now that OMV is up and running, we've officially made a RPi NAS Server. The rest of this tutorial uses NextCloud to make our NAS Server cloud-based (i.e. accessible from anywhere).
 
-Change the port to 90 (default is 80). You will get an error because OMV5 is only available on port 90 now and you need to specify this in the URL (<IP>:90). We do this because Apache web server defaults to port 80 (explained later on) and it's just easier this way.
+## 3. Install NextCloud on top of OMV
+
+Navigate to OMV by going to `<IP>` and enter your login information. Unless you have changed it, the username is `admin` and password is `openmediavault` by default.
+
+Change the port to `90` (default is `80`). You will immediately get an error because OMV is now only available on port 90 and you need to specify this in the URL (`<IP>:90`). We do this because Apache web server defaults to port `80` (explained later on) and it's just easier this way.
 	
 Before continuing, make sure to `apt-update` and `apt-upgrade`.
 	
 ### Install Web Server (Apache), MariaDB Server, and PHP modules
 
-Enter these commands into your SSH-connected Terminal:
+Here's where we install our web server, database server, and the PHP modules needed for NC to run. Enter these commands into your Terminal:
 ```
 sudo apt-get install apache2 mariadb-server libapache2-mod-php
 ```
-then
+
 ```
 sudo apt-get install php7.3-gd php7.3-json php7.3-mysql php7.3-curl php7.3-mbstring 
 ```
-then
+
+
 ```
 sudo apt-get install php7.3-intl php-imagick php7.3-xml php7.3-zip
 ```
@@ -153,11 +152,11 @@ Finally, restart the web server
 ```
 sudo service apache2 restart
 ```
-Go to the OMV5 GUI port 80 (default) and the default Apache web page should show up. This is good.
+Go to the OMV GUI port 80 (default) and the default Apache web page should show up. This is good.
 
 ### Download NextCloud
 
-Time to add NC! First, navigate to the `html` directory with the following command:
+Time to add NC! First, navigate to the `html` directory with the following command in Terminal:
 ```
 cd /var/www/html
 ```
@@ -169,27 +168,27 @@ Now we create a folder where NC can save information.
 ```
 sudo mkdir -p /var/www/html/nextcloud/data
 ```
-Next, we configure control and permissions of our newly created folder so we can access NC on our webserver.
+Next, we need to configure permissions of our newly created folder so we can access NC on our webserver.
 ```
 sudo chown -R www-data:www-data /var/www/html/nextcloud/
 ```
 ```
 sudo chmod 750 /var/www/html/nextcloud/data
 ```
-Now that we're done, restart the Apache web server and reboot your RPI.
+Now that we're done, restart the Apache web server and reboot your RPi.
 ```
 sudo service apache2 restart
 ```
 ```
 sudo reboot
 ```
-Give your RPI a chance to reboot, then login via SSH again. Run `apt-update` and `apt-upgrade` to make sure everything is updated.
+Give your RPi a chance to reboot, then login via SSH again. Run `apt-update` and `apt-upgrade` to make sure everything is updated.
 
-Now, the exciting part. Go to your `<ip>` and you should see the Apache default page runnning. Suffix the URL with `/nextcloud/` (Ex. `192.168.1.41/nextcloud`) and you should see the NC login page. 
+Go to the `<ip>` URL and you should see the Apache default page runnning. Suffix the URL with `/nextcloud/` (Ex. `192.168.1.41/nextcloud`) and you should see the NC login page. 
 
 ## 4. Configure NextCloud
 
-In order to configure NC, we need to configure the MySQL database. Back to the SSH Terminal we go. Change all of the code in `[brackets]` to your own text.
+In order to configure NC, we need to configure the MySQL database. Back to the Terminal we go. Change all of the code in `[brackets]` to your own text.
 
 ```
 sudo mysql
@@ -211,35 +210,43 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
+After doing that, you can finally login to NC. Back on the `<ip>/nextcloud` page, fill out the db information form with the `[db name]`, `[db username]`, and `[db password]` text you just entered. Create an admin username and password and hit Login.
+
 ## 5. Allow NextCloud Access from External Networks
 
 ### Port Forwarding
 
-We need to forward <b>Port 80</b> and <b>Port 443 (for Dynamic DNS, explained later on)</b> to the RPI IP address.
+We need to forward <b>Port 80</b> and <b>Port 443 (for Dynamic DNS, explained later on)</b> to the RPi IP address.
 
-To set up port forwarding, you'll need to access your router admin. To access your router, type its IP address into your browser. If you don't know the IP address, use the following command to find it:
+To set up port forwarding, you'll need to access your router admin. Type the router's IP address into your browser. If you don't know the IP address, use the following command to find it:
 
 ```
 netstat -nr | grep default
 ```
-It will be listed beside the `default` keyword and will probably look something like `192.168.1.1`. Because you probably have a different router than me, I am unable to help you with this step. Google the instructions on how to set up port forwarding for your particular router model.
+It will be listed beside the `default` keyword and will probably look something like `192.168.1.1`. Just make sure that you create two port forwarding records that point to your RPi IP address (also the IP of OMV and NC). The internal-external ports should look like this:
+- 1. Internal port 80-80
+- 1. External port 80-80
+- 2. Internal port 443-443
+- 2. External port 443-443
 
 ### Dynamic DNS
 
-To set up dynamic DNS, we will use <a href="https://www.duckdns.org/">Duck DNS</a>. It's free and straightforward to use. At this point, you should make sure that Port Forwarding is set up for Port 443, or this isn't going to work.
+To set up dynamic DNS, we will use <a href="https://www.duckdns.org/">Duck DNS</a>. It's free and straightforward to use. At this point, make sure that Port Forwarding is set up for Port 443 or this isn't going to work.
 Log in to Duck DNS using one of the provided methods, then add a domain of your choice, for example `mycloud.duckdns.com`.
 
-#### NOTE: You might not be able to access your `.duckdns.org` domain on your wifi network. For testing, use your phone one cellular data. You should see the apache default page if everything is working correctly.
+#### NOTE: You might not be able to access your `mycloud.duckdns.org` domain on your wifi network. For testing, use your phone's cellular data. You should see the apache default page if everything is working correctly.
 
-### Configuring trusted domains
+### Configure trusted domains
 
-In order to access your NC, we need to configure the `.duckdns.org` domain in the `config.php` file. Time to go back to the terminal. Through SSH, navigate to `/var/www/html/nextcloud/config` using the following command:
+In order to access your NC, we need to trust the `mycloud.duckdns.org` domain in the `config.php` file. 
+
+Back to the terminal. Navigate to `/var/www/html/nextcloud/config` using the following command:
 
 ```
 cd /var/www/html/nextcloud/config
 ```
 
-Next, we need to edit the `config.php` file. `config.php` has heavy permissions so you will need to `sudo` in order to read & write. Use the following command:
+If you `ls` from here, you should see a file named `config.php` (NOT `config.sample.php`), which is the file we need to edit. `config.php` has heavy permissions so you will need to `sudo` in order to read & write. Use the following command:
 
 ```
 sudo nano config.php
@@ -270,7 +277,7 @@ $CONFIG = array (
   'installed' => true,
 );
 ```
-We need to edit the `trusted_domains` property and add our `.duckdns.org` domain name. After doing so, the file should look like this:
+We need to edit the `trusted_domains` property and add our `mycloud.duckdns.org` domain name. After doing so, the file should look like this:
 ```
 <?php
 $CONFIG = array (
@@ -296,12 +303,12 @@ $CONFIG = array (
   'installed' => true,
 );
 ```
-Make sure to save the file. Once that is done, you'll be able to access your NC via any network using the `.duckdns.org` domain name. Give it a try on your phone to confirm that it works (use cellular data again).
+Make sure to save the file. Once that is done, you'll be able to access your NC via any network using the `.duckdns.org` domain name. Give it a try on your phone to confirm that it works (use cellular data).
 
 
 ## 6. Add External Hard Drive and Connect it to NextCloud
 
-Ah, the final step (thank goodness).
+Ah, the final step.
 
 On the OMV dashboard, navigate to File Systems. From here, find your connected HD and click the Mount button.
 
@@ -309,7 +316,7 @@ Now, on the NC dashboard, click the icon at the top-right of your screen and sel
 
 ### Configure Permissions
 
-Back in our SSH Terminal, we need to set permissions on our newly mounted HD. First, we need the mount point path. We can find this by going into the `/srv/` directory and typing `ls` to view the folder contents. You should see something like `dev-disk-by-label-XXX`. The mount point path is therefore `/srv/dev-disk-by-label-XXX`.
+Back in our Terminal, we need to set permissions on our newly mounted HD. First, we need the mount point path. We can find this by going into the `/srv/` directory and typing `ls` to view the folder contents. You should see something like `dev-disk-by-label-XXX`. The mount point path is therefore `/srv/dev-disk-by-label-XXX`.
 
 Now that we have this, enter the following commands to configure a couple permissions:
 ```
@@ -318,25 +325,25 @@ sudo chown -R www-data:www-data /srv/dev-disk-by-label-XXX
 ```
 sudo chmod -R 0750 /srv/dev-disk-by-label-XXX
 ```
-Back in the NC dashboard, click the top-right icon again and then go to Settings. Add a folder name of your choice, set the External Storage to Local and paste in the `/srv/dev-disk-by-label-XXX` location under Configuration. Save it, and now if you navigate back to the External Storages tab you should see your newly added HD and its data.
+Back in the NC dashboard, click the top-right icon again and then go to Settings. Add a folder name of your choice, set the External Storage to Local and paste in the `/srv/dev-disk-by-label-XXX` location under Configuration. Save it. If you navigate back to the External Storages tab, you should see your newly added HD and its data.
 
-### Connect it to OMV
+### Connect HD to OMV
 
 In the OMV dashboard, under Shared Folders, add a shared folder with the mounter HD as the Device. Then, under SMB/CIFS, make sure it is enabled (under General Settings) and click on the Shares tab. Add a share using the folder we just created and configure it as you like.
 
 ### Time to test
 
-We're done! Let's make sure everything is working and we can move files from our Mac to our External Hard Drive.
+Let's make sure everything is working and we can move files from our Mac to our External Hard Drive.
 
 Open up a Finder window on your Mac and press `Command+K`. In the text field, enter the following:
 ```
-smb://<IP of your RPI>
+smb://<IP of your RPi>
 ```
 Connect to it and enter your login information. Once it's all set up, try to drag & drop some files into the folder. Wait for them to copy and Wall-Ah! Your files are safe & sound on your HD and can be accessed through NextCloud.
 
 ## 7. Celebrate
 
-Congratualtions! You just created your own personal cloud storage solution and you can now put files directly onto your external hard drive from anywhere in the world. It's not the most performant solution in the world but hey, you're in complete control of your data now. Give yourself a pat on the back, you deserve it.
+Congratualtions! You just created your own personal cloud storage server and you can now put files directly onto your external hard drive from anywhere in the world. It's not the most performant solution in the world but hey, you're in complete control of your data now. Give yourself a pat on the back, you deserve it.
 
 
 
