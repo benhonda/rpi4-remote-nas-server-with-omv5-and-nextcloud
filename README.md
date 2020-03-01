@@ -1,5 +1,5 @@
 
-# Raspberry Pi 4 NAS Server with OpenMediaVault 5 and NextCloud on MacOS Mojave
+# How to build a personal cloud storage solution on a Raspberry Pi in 1 day.
 
 ### Preface
 This tutorial was created on March 1st, 2020. I will not be updating it much in the future, however, unless there are major changes made to OpenMediaVault or NextCloud, it should still be applicable for years to come.
@@ -11,6 +11,7 @@ Also, big shoutout to <a href="https://pcmac.biz/">PcMac</a> and <a href="http:/
 If you're ready to build your own personal cloud-based storage solution, let's get started!
 
 ### What you're gonna need (or something similar)
+- Mac computer (this is an Apple tutorial)
 - Raspberry Pi 4 with Raspbian
 - Micro SD card (ideally >4GB and FAST)
 - External hard drive (this is your actual storage, so ideally USB 3.0, >500GB and formatted as ExFAT)
