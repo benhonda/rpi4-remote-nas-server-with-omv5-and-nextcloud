@@ -1,5 +1,5 @@
 
-# How to build a personal cloud storage solution in 1 day.
+# How to build a personal cloud storage server in 1 day or less.
 
 ### Preface
 This tutorial was created on March 1st, 2020. I will not be updating it much in the future, however, unless there are major changes made to OpenMediaVault or NextCloud, it should still be applicable for years to come.
