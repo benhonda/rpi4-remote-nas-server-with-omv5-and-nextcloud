@@ -15,7 +15,7 @@
 This tutorial was created on March 1st, 2020. I will not be updating it much in the future, however, unless there are major changes made to OpenMediaVault or NextCloud, it should still be applicable for years to come.
 <br />
 <br />
-Also, big shoutout to <a href="https://pcmac.biz/">PcMac</a> and <a href="http://wagnerstechtalk.com/rpi4omv/">Wagner's TechTalk</a>, whose videos and documentation taught me how to do this. If you learn better through YouTube videos, check out their YouTube pages <a href="https://www.youtube.com/channel/UCAflQPuKZnTBcLZIbPYCyaA/featured">here (PcMac)</a> and <a href="https://www.youtube.com/channel/UC1QvDo-qeCVKTlmDq1LjDuw">here (WTT)</a>.
+Also, a big shoutout to <a href="https://pcmac.biz/">PcMac</a> and <a href="http://wagnerstechtalk.com/rpi4omv/">Wagner's TechTalk</a>, whose videos and documentation taught me how to do this. If you learn better through YouTube videos, check out their YouTube pages <a href="https://www.youtube.com/channel/UCAflQPuKZnTBcLZIbPYCyaA/featured">here (PcMac)</a> and <a href="https://www.youtube.com/channel/UC1QvDo-qeCVKTlmDq1LjDuw">here (WTT)</a>.
 <br />
 <br />
 If you're ready to build your own personal cloud-based storage solution, let's get started!
@@ -131,7 +131,7 @@ If after installing OMV you can no longer log into your RPi via SSH (`permission
 
 ### A quick note before continuing...
 
-Now that OMV is up and running, we've officially made a RPi NAS Server. The rest of this tutorial uses NextCloud to make our NAS Server cloud-based (i.e. accessible from anywhere).
+Now that OMV is up and running, we've officially made an RPi NAS Server. The rest of this tutorial uses NextCloud to make our NAS Server cloud-based (i.e. accessible from anywhere).
 
 ## 3. Install NextCloud on top of OMV
 
@@ -193,7 +193,7 @@ sudo reboot
 ```
 Give your RPi a chance to reboot, then login via SSH again. Run `apt-update` and `apt-upgrade` to make sure everything is updated.
 
-Go to the `<ip>` URL and you should see the Apache default page runnning. Suffix the URL with `/nextcloud/` (Ex. `192.168.1.41/nextcloud`) and you should see the NC login page. 
+Go to the `<ip>` URL and you should see the Apache default page running. Suffix the URL with `/nextcloud/` (Ex. `192.168.1.41/nextcloud`) and you should see the NC login page. 
 
 ## 4. Configure NextCloud
 
@@ -325,7 +325,7 @@ Now, on the NC dashboard, click the icon at the top-right of your screen and sel
 
 ### Configure Permissions
 
-Back in our Terminal, we need to set permissions on our newly mounted HD. First, we need the mount point path. We can find this by going into the `/srv/` directory and typing `ls` to view the folder contents. You should see something like `dev-disk-by-label-XXX`. The mount point path is therefore `/srv/dev-disk-by-label-XXX`.
+Back in our Terminal, we need to set permissions on our newly mounted HD. First, we need the mount point path. We can find this by going into the `/srv/` directory and typing `ls` to view the folder contents. You should see something like `dev-disk-by-label-XXX`. The mount point path is, therefore, `/srv/dev-disk-by-label-XXX`.
 
 Now that we have this, enter the following commands to configure a couple permissions:
 ```
@@ -352,7 +352,7 @@ Connect to it and enter your login information. Once it's all set up, try to dra
 
 ## 7. Celebrate
 
-Congratualtions! You just created your own personal cloud storage server and you can now put files directly onto your external hard drive from anywhere in the world. It's not the most performant solution in the world but hey, you're in complete control of your data now. Give yourself a pat on the back, you deserve it.
+Congratulations! You just created your own personal cloud storage server and you can now put files directly onto your external hard drive from anywhere in the world. It's not the most performant solution in the world but hey, you're in complete control of your data now. Give yourself a pat on the back, you deserve it.
 
 <br />
 <br />
