@@ -1,7 +1,10 @@
 
 # How to build a personal cloud storage server in 1 day or less.
 
+#### The instructions included in this tutorial are for those working on MacOS. If are working on a Microsoft system or similar the general process is the same, you'll just have to convert the code instructions to the non-linux equivalent.
+
 ### Preface
+
 This tutorial was created on March 1st, 2020. I will not be updating it much in the future, however, unless there are major changes made to OpenMediaVault or NextCloud, it should still be applicable for years to come.
 <br />
 <br />
